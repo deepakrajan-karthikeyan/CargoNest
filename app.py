@@ -325,12 +325,18 @@ def register():
 def login():
     if request.method=='POST':
         email=request.form.get('email','').strip().lower(); password=request.form.get('password','')
-        con=db(); u=con.execute('SELECT * FROM users WHERE email=?',(email,)).fetchone(); con.close()
-        if u and check_password_hash(u['password_hash'],password):
-            if u['status']!='active': flash('Your account is pending admin approval or inactive.','warning')
-            else:
-                session.clear(); session['user_id']=u['id']; return redirect(url_for(u['role']+'_dashboard'))
-        else: flash('Invalid email or password.','danger')
+        try:
+            con=db()
+            u=con.execute('SELECT * FROM users WHERE email=?',(email,)).fetchone()
+            con.close()
+            if u and check_password_hash(u['password_hash'],password):
+                if u['status']!='active': flash('Your account is pending admin approval or inactive.','warning')
+                else:
+                    session.clear(); session['user_id']=u['id']; return redirect(url_for(u['role']+'_dashboard'))
+            else: flash('Invalid email or password.','danger')
+        except mysql.connector.Error:
+            app.logger.exception('Login database connection failed')
+            flash('Login is temporarily unavailable. Configure a hosted MySQL database in Vercel project settings.','danger')
     return render_template('auth.html',mode='login')
 
 @app.route('/logout')
