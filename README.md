@@ -32,6 +32,16 @@ internet connection.
 The PWA files are `static/manifest.json`, `static/service-worker.js` and
 `static/icons/icon.svg`. No browser extension is required.
 
+## Vercel deployment
+
+The repository includes `vercel.json` and `api/index.py` for Flask deployment.
+In Vercel Project Settings → Environment Variables, configure a hosted MySQL
+database with `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD` and
+`MYSQL_DATABASE`, plus a strong `CARGONEST_SECRET`. Set
+`CARGONEST_INIT_DB=1` for the first deployment to create the schema and admin
+user, then set it to `0` for subsequent deployments. A local XAMPP MySQL
+server (`127.0.0.1`) cannot be reached by Vercel.
+
 The configured MySQL database and tables are created on first run. The `load_optimizations` table is also created automatically; existing CargoNest databases do not need to be deleted.
 
 Default initial admin credentials (change immediately after first login):

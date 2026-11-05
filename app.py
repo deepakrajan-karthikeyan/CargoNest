@@ -190,7 +190,8 @@ def init_db():
     con.commit()
     con.close()
 
-init_db()
+if os.environ.get('CARGONEST_INIT_DB', '1') == '1':
+    init_db()
 
 # ---------------- Helpers ----------------
 def current_user():
