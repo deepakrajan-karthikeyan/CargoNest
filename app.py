@@ -190,7 +190,9 @@ def init_db():
     con.commit()
     con.close()
 
-if os.environ.get('CARGONEST_INIT_DB', '1') == '1':
+init_db_enabled = os.environ.get('CARGONEST_INIT_DB',
+                                  '0' if os.environ.get('VERCEL') else '1')
+if init_db_enabled == '1':
     init_db()
 
 # ---------------- Helpers ----------------
